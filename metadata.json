@@ -1,0 +1,6 @@
+{
+  "name": "Dataloom – Enterprise AI-Powered ETL & Data Integration Platform Blueprint",
+  "description": "Enterprise Architecture Blueprint and Interactive Canvas for Dataloom, a low-code/no-code AI-powered ETL and data integration platform.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
