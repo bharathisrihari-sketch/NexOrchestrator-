@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { EnvironmentType, WorkspaceType } from '../types/architecture';
-import { Server, FolderGit2, ShieldAlert, Play, Square, RotateCcw, Code } from 'lucide-react';
+import { Server, FolderGit2, ShieldAlert, Play, Square, RotateCcw, Code, EyeOff, Maximize2, Loader2, BarChart2, Archive } from 'lucide-react';
+import { exportProjectZip } from '../utils/projectZipExporter';
 
 interface EnvironmentBarProps {
   environment: EnvironmentType;
@@ -11,6 +12,15 @@ interface EnvironmentBarProps {
   onToggleSimulation: () => void;
   onResetSimulation: () => void;
   onOpenAsciiModal: () => void;
+  onHideHeader?: () => void;
+  onToggleAllHeaders?: () => void;
+  areAllHeadersHidden?: boolean;
+  isZenMode?: boolean;
+  onToggleZenMode?: () => void;
+  onRunWorkflow?: () => void;
+  isWorkflowRunning?: boolean;
+  onOpenResults?: () => void;
+  hasResults?: boolean;
 }
 
 export const EnvironmentBar: React.FC<EnvironmentBarProps> = ({
@@ -21,10 +31,19 @@ export const EnvironmentBar: React.FC<EnvironmentBarProps> = ({
   isSimulating,
   onToggleSimulation,
   onResetSimulation,
-  onOpenAsciiModal
+  onOpenAsciiModal,
+  onHideHeader,
+  onToggleAllHeaders,
+  areAllHeadersHidden = false,
+  isZenMode,
+  onToggleZenMode,
+  onRunWorkflow,
+  isWorkflowRunning = false,
+  onOpenResults,
+  hasResults = false
 }) => {
   return (
-    <div className="h-10 border-b border-slate-800 bg-slate-900/90 px-6 flex items-center justify-between text-xs text-slate-300">
+    <div className="h-10 border-b border-slate-800 bg-slate-900/90 px-4 sm:px-6 flex items-center justify-between text-xs text-slate-300 shrink-0">
       {/* Left Selectors */}
       <div className="flex items-center gap-4 divide-x divide-slate-800">
         {/* Environment Selector */}
@@ -68,14 +87,61 @@ export const EnvironmentBar: React.FC<EnvironmentBarProps> = ({
       </div>
 
       {/* Right Controls */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 sm:gap-2">
+        {onToggleAllHeaders && (
+          <button
+            onClick={onToggleAllHeaders}
+            className="px-2.5 py-1 text-cyan-300 hover:text-white bg-cyan-950/60 hover:bg-cyan-900/80 border border-cyan-800 rounded flex items-center gap-1.5 text-[11px] font-semibold transition-all shadow-sm"
+            title="Hide all headers (Top Header, Sidebar & Bottom Console) so canvas is 100% visible [Keyboard shortcut: H]"
+          >
+            <EyeOff className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="hidden sm:inline">Hide All Headers</span>
+            <kbd className="hidden md:inline font-mono text-[9px] bg-slate-900 px-1 py-0.2 rounded border border-cyan-900/80 text-cyan-300">H</kbd>
+          </button>
+        )}
+
+        {onHideHeader && (
+          <button
+            onClick={onHideHeader}
+            className="px-2 py-1 text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 rounded flex items-center gap-1 text-[11px] transition-colors"
+            title="Hide only this top bar"
+          >
+            <span className="hidden sm:inline">Hide Top Bar</span>
+          </button>
+        )}
+
+        {onToggleZenMode && (
+          <button
+            onClick={onToggleZenMode}
+            className={`px-2.5 py-1 rounded flex items-center gap-1 text-[11px] transition-colors border ${
+              isZenMode
+                ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                : 'text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border-slate-700'
+            }`}
+            title="Zen Mode: Hide all headers, sidebar and surrounding chrome"
+          >
+            <Maximize2 className="w-3 h-3 text-amber-400" />
+            <span className="hidden md:inline">Zen Canvas</span>
+          </button>
+        )}
+
         <button
           onClick={onOpenAsciiModal}
           className="px-2.5 py-1 text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded flex items-center gap-1 text-[11px] transition-colors"
           title="View detailed ASCII wireframe"
         >
           <Code className="w-3 h-3 text-cyan-400" />
-          <span>ASCII Wireframe</span>
+          <span className="hidden lg:inline">ASCII</span>
+        </button>
+
+        {/* Download All Code & Details as ZIP Button */}
+        <button
+          onClick={() => exportProjectZip({ appName: 'NxtGenOrchestrator' })}
+          className="px-2.5 py-1 text-cyan-300 hover:text-white bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/80 rounded flex items-center gap-1.5 text-[11px] font-semibold transition-all shadow-sm"
+          title="Download all code, components and details into one stand-alone ZIP file to generate the same app under another user login"
+        >
+          <Archive className="w-3.5 h-3.5 text-cyan-400" />
+          <span className="hidden sm:inline">Export ZIP</span>
         </button>
 
         <button
@@ -86,26 +152,69 @@ export const EnvironmentBar: React.FC<EnvironmentBarProps> = ({
           <RotateCcw className="w-3.5 h-3.5" />
         </button>
 
-        <button
-          onClick={onToggleSimulation}
-          className={`px-3 py-1 rounded font-medium flex items-center gap-1.5 transition-colors ${
-            isSimulating
-              ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30 hover:bg-rose-500/30'
-              : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/30'
-          }`}
-        >
-          {isSimulating ? (
-            <>
-              <Square className="w-3 h-3 fill-current" />
-              <span>Halt Execution</span>
-            </>
-          ) : (
-            <>
-              <Play className="w-3 h-3 fill-current" />
-              <span>Simulate Pipeline</span>
-            </>
-          )}
-        </button>
+        {/* Results Button */}
+        {onOpenResults && (
+          <button
+            onClick={onOpenResults}
+            className={`px-2.5 py-1 text-[11px] font-semibold rounded flex items-center gap-1.5 transition-colors border ${
+              hasResults
+                ? 'bg-indigo-950 text-indigo-300 hover:text-white border-indigo-700/80 shadow-sm'
+                : 'bg-slate-800 text-slate-300 hover:text-white border-slate-700'
+            }`}
+            title="Open workflow execution results report"
+          >
+            <BarChart2 className="w-3.5 h-3.5 text-indigo-400" />
+            <span className="hidden sm:inline">Results</span>
+            {hasResults && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />}
+          </button>
+        )}
+
+        {/* Run Workflow Button */}
+        {onRunWorkflow ? (
+          <button
+            onClick={onRunWorkflow}
+            disabled={isWorkflowRunning}
+            className={`px-3 py-1 rounded font-bold text-xs flex items-center gap-1.5 transition-all shadow-md ${
+              isWorkflowRunning
+                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 cursor-wait'
+                : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 shadow-emerald-500/20'
+            }`}
+            title="Run active workflow pipeline"
+          >
+            {isWorkflowRunning ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" />
+                <span>Running...</span>
+              </>
+            ) : (
+              <>
+                <Play className="w-3.5 h-3.5 fill-current" />
+                <span>Run Workflow</span>
+              </>
+            )}
+          </button>
+        ) : (
+          <button
+            onClick={onToggleSimulation}
+            className={`px-3 py-1 rounded font-medium flex items-center gap-1.5 transition-colors ${
+              isSimulating
+                ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30 hover:bg-rose-500/30'
+                : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/30'
+            }`}
+          >
+            {isSimulating ? (
+              <>
+                <Square className="w-3 h-3 fill-current" />
+                <span>Halt</span>
+              </>
+            ) : (
+              <>
+                <Play className="w-3.5 h-3.5 fill-current" />
+                <span>Simulate</span>
+              </>
+            )}
+          </button>
+        )}
       </div>
     </div>
   );

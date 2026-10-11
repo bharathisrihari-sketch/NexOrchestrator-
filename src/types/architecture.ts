@@ -16,9 +16,26 @@ export interface DAGNode {
   config: NodeConfig;
 }
 
+export interface AutoScalingConfig {
+  enabled: boolean;
+  minCpu: string;
+  maxCpu: string;
+  minMemory: string;
+  maxMemory: string;
+  targetMetric: 'Throughput (rec/s)' | 'CPU Utilization (%)' | 'Memory Pressure (%)';
+  targetValue: number;
+  scaleUpThresholdPercent: number;
+  scaleDownThresholdPercent: number;
+  currentScaledCpu?: string;
+  currentScaledMemory?: string;
+  scalingState?: 'Nominal' | 'Scaling Up' | 'Scaling Down' | 'Peak Allocated';
+  lastScalingEvent?: string;
+}
+
 export interface NodeConfig {
   cpuAllocation: string;
   memoryAllocation: string;
+  autoScaling?: AutoScalingConfig;
   containerRuntime: {
     engine: string;
     image: string;
@@ -83,6 +100,70 @@ export interface DAGEdge {
   target: string;
   label?: string;
   dataFlowRate?: string;
+  connectorType?: 'kafka' | 'snowflake' | 's3' | 'salesforce' | 'rest' | 'grpc' | 'gemini' | 'postgres' | 'databricks' | 'generic';
+  connectorProtocol?: string;
+  connectorStatus?: 'connected' | 'syncing' | 'streaming' | 'idle' | 'error';
+  connectorName?: string;
+}
+
+export interface WorkflowExecutionStepResult {
+  nodeId: string;
+  nodeName: string;
+  category: NodeType;
+  status: 'completed' | 'running' | 'failed' | 'skipped';
+  durationMs: number;
+  recordsIn: number;
+  recordsOut: number;
+  throughput: string;
+  statusMessage: string;
+}
+
+export interface ConnectorExecutionResult {
+  edgeId: string;
+  connectorName: string;
+  connectorType: string;
+  sourceNodeName: string;
+  targetNodeName: string;
+  protocol: string;
+  status: 'handshake_verified' | 'streaming' | 'connected' | 'idle' | 'failed';
+  latencyMs: number;
+  bytesTransferred: string;
+  securityCipher: string;
+}
+
+export interface WorkflowExecutionResult {
+  runId: string;
+  workflowId: string;
+  workflowName: string;
+  timestamp: string;
+  status: 'SUCCESS' | 'RUNNING' | 'FAILED';
+  durationSeconds: number;
+  recordsProcessed: number;
+  throughput: string;
+  errorRate: string;
+  totalBytes: string;
+  costEstimate: string;
+  complianceStatus: string;
+  stepResults: WorkflowExecutionStepResult[];
+  connectorResults: ConnectorExecutionResult[];
+  outputPayloadSample: Record<string, any>[];
+  auditLogs: Array<{
+    timestamp: string;
+    level: 'INFO' | 'SUCCESS' | 'WARN' | 'AUDIT' | 'ERROR' | 'METRIC' | 'SECURITY';
+    component: string;
+    message: string;
+  }>;
+}
+
+export interface WorkflowCatalogItem {
+  id: string;
+  name: string;
+  description: string;
+  category: 'Integration' | 'Fraud & Risk' | 'Lakehouse' | 'Healthcare / HIPAA' | 'GenAI' | 'FinTech';
+  environment: EnvironmentType;
+  nodes: DAGNode[];
+  edges: DAGEdge[];
+  defaultResults?: WorkflowExecutionResult;
 }
 
 export interface CopilotAnalysisResult {
@@ -156,4 +237,37 @@ export interface RoadmapPhase {
   objective: string;
   weeks: RoadmapWeek[];
   exitCriteria: string[];
+}
+
+export type AuditLogSeverity = 'critical' | 'high' | 'medium' | 'low' | 'info';
+
+export type AuditCategory = 
+  | 'Security Enforcement'
+  | 'Access & IAM'
+  | 'Compliance & Policy'
+  | 'Data Leakage Prevention'
+  | 'Encryption & KMS'
+  | 'Network Egress'
+  | 'Container Sandbox';
+
+export interface AuditLogEvent {
+  id: string;
+  timestamp: string;
+  ruleCode: string;
+  category: AuditCategory;
+  severity: AuditLogSeverity;
+  nodeId: string;
+  nodeName: string;
+  summary: string;
+  policyStandard: string;
+  automatedAction: string;
+  status: 'Remediated' | 'Blocked' | 'Quarantined' | 'Logged';
+  principalRole: string;
+  cryptographicHash: string;
+  details: {
+    resourceTarget: string;
+    triggerMetricOrPayload: string;
+    mitigationLatencyMs: number;
+    auditChainBlockIndex: number;
+  };
 }

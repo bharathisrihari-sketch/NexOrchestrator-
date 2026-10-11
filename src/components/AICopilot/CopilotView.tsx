@@ -24,6 +24,7 @@ export const CopilotView: React.FC<CopilotViewProps> = ({
   const [isSynthesizing, setIsSynthesizing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<CopilotAnalysisResult>(SAMPLE_COPILOT_ANALYSIS);
   const [activeStepTab, setActiveStepTab] = useState<'analysis' | 'security' | 'quality' | 'graph'>('analysis');
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
 
   const handleSynthesize = () => {
     setIsSynthesizing(true);
@@ -41,23 +42,37 @@ export const CopilotView: React.FC<CopilotViewProps> = ({
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-950 p-6 lg:p-8 space-y-8 max-w-7xl mx-auto w-full">
+    <div className="flex-1 overflow-y-auto bg-slate-950 p-4 lg:p-6 space-y-4 max-w-7xl mx-auto w-full select-none">
+      {/* Top Header Toggle Strip */}
+      <div className="flex items-center justify-between pb-1">
+        <span className="text-xs font-mono text-amber-400">AI Workflow Copilot</span>
+        <button
+          onClick={() => setIsHeaderVisible(!isHeaderVisible)}
+          className="px-2.5 py-1 text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded flex items-center gap-1.5 text-xs transition-colors"
+          title={isHeaderVisible ? "Hide header to maximize prompt and canvas workspace" : "Show header"}
+        >
+          <span>{isHeaderVisible ? 'Hide Header' : 'Show Header'}</span>
+        </button>
+      </div>
+
+      {/* Header Banner (Collapsible) */}
+      {isHeaderVisible && (
+        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
+          <span className="text-xs font-mono uppercase tracking-wider text-amber-400 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-800/60">
+            Section 2 · AI Natural-Language Pipeline Synthesizer
+          </span>
+          <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-amber-400" />
+            <span>Interactive AI Workflow Copilot</span>
+          </h1>
+          <p className="text-xs text-slate-400 max-w-3xl">
+            Describe data integration workflows in natural language. The AI Copilot translates instructions into an enterprise-grade DAG, generates security guardrails, configures data quality assertions, and validates container resources.
+          </p>
+        </div>
+      )}
+
       {/* Header & Prompt Section */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <span className="text-xs font-mono uppercase tracking-wider text-amber-400 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-800/60">
-              Section 2 · AI Natural-Language Pipeline Synthesizer
-            </span>
-            <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-              <Sparkles className="w-6 h-6 text-amber-400" />
-              <span>Interactive AI Workflow Copilot</span>
-            </h1>
-            <p className="text-sm text-slate-400 max-w-3xl">
-              Describe data integration workflows in natural language. The AI Copilot translates instructions into an enterprise-grade DAG, generates security guardrails, configures data quality assertions, and validates container resources.
-            </p>
-          </div>
-        </div>
 
         {/* Prompt Input Box */}
         <div className="rounded-xl bg-slate-900 border border-slate-800 p-4 shadow-xl space-y-3">

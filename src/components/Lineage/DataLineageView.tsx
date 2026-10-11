@@ -19,7 +19,9 @@ import {
   Filter, 
   AlertTriangle,
   Database,
-  Binary
+  Binary,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 
 interface DataLineageViewProps {
@@ -39,6 +41,7 @@ export const DataLineageView: React.FC<DataLineageViewProps> = ({
   const [columnSearch, setColumnSearch] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
   const [copiedJson, setCopiedJson] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
 
   const lineageData = useMemo(() => {
     return parseDAGLineage(nodes, edges);
@@ -71,20 +74,35 @@ export const DataLineageView: React.FC<DataLineageViewProps> = ({
   });
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-950 p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full select-none">
-      {/* View Header */}
-      <div className="space-y-1">
-        <span className="text-xs font-mono uppercase tracking-wider text-purple-400 bg-purple-950/60 px-2 py-0.5 rounded border border-purple-800/60">
-          Governance & Data Lineage Engine · OpenLineage Standard
-        </span>
-        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-          <GitBranch className="w-6 h-6 text-purple-400" />
-          <span>Data Lineage & Transformation Dependency Visualizer</span>
-        </h1>
-        <p className="text-sm text-slate-400 max-w-3xl">
-          Automated DAG parsing that maps end-to-end data flow paths, upstream dataset provenance, downstream blast radius impact, and column-level cryptographic mutation contracts.
-        </p>
+    <div className="flex-1 overflow-y-auto bg-slate-950 p-4 lg:p-6 space-y-4 max-w-7xl mx-auto w-full select-none">
+      {/* Top Header Toggle Strip */}
+      <div className="flex items-center justify-between pb-1">
+        <span className="text-xs font-mono text-purple-400">Data Lineage Canvas</span>
+        <button
+          onClick={() => setIsHeaderVisible(!isHeaderVisible)}
+          className="px-2.5 py-1 text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded flex items-center gap-1.5 text-xs transition-colors"
+          title={isHeaderVisible ? "Hide header to maximize lineage canvas" : "Show header"}
+        >
+          <Eye className="w-3.5 h-3.5 text-purple-400" />
+          <span>{isHeaderVisible ? 'Hide Header' : 'Show Header'}</span>
+        </button>
       </div>
+
+      {/* View Header (Collapsible) */}
+      {isHeaderVisible && (
+        <div className="space-y-1 p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+          <span className="text-xs font-mono uppercase tracking-wider text-purple-400 bg-purple-950/60 px-2 py-0.5 rounded border border-purple-800/60">
+            Governance & Data Lineage Engine · OpenLineage Standard
+          </span>
+          <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+            <GitBranch className="w-5 h-5 text-purple-400" />
+            <span>Data Lineage & Transformation Dependency Visualizer</span>
+          </h1>
+          <p className="text-xs text-slate-400 max-w-3xl">
+            Automated DAG parsing that maps end-to-end data flow paths, upstream dataset provenance, downstream blast radius impact, and column-level cryptographic mutation contracts.
+          </p>
+        </div>
+      )}
 
       {/* Node Selector Strip */}
       <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center gap-2 overflow-x-auto">

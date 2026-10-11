@@ -20,6 +20,21 @@ export const INITIAL_NODES: DAGNode[] = [
     config: {
       cpuAllocation: '2.0 vCPU',
       memoryAllocation: '4.0 GiB',
+      autoScaling: {
+        enabled: true,
+        minCpu: '1.0 vCPU',
+        maxCpu: '8.0 vCPU',
+        minMemory: '2.0 GiB',
+        maxMemory: '16.0 GiB',
+        targetMetric: 'Throughput (rec/s)',
+        targetValue: 20000,
+        scaleUpThresholdPercent: 80,
+        scaleDownThresholdPercent: 25,
+        currentScaledCpu: '2.0 vCPU',
+        currentScaledMemory: '4.0 GiB',
+        scalingState: 'Nominal',
+        lastScalingEvent: 'Baseline allocation active'
+      },
       containerRuntime: {
         engine: 'OCI Standard Container',
         image: 'registry.internal/runtimes/connector-rdbms:v3.2',
@@ -102,6 +117,21 @@ export const INITIAL_NODES: DAGNode[] = [
     config: {
       cpuAllocation: '4.0 vCPU',
       memoryAllocation: '8.0 GiB',
+      autoScaling: {
+        enabled: true,
+        minCpu: '2.0 vCPU',
+        maxCpu: '16.0 vCPU',
+        minMemory: '4.0 GiB',
+        maxMemory: '32.0 GiB',
+        targetMetric: 'Throughput (rec/s)',
+        targetValue: 25000,
+        scaleUpThresholdPercent: 80,
+        scaleDownThresholdPercent: 25,
+        currentScaledCpu: '4.0 vCPU',
+        currentScaledMemory: '8.0 GiB',
+        scalingState: 'Nominal',
+        lastScalingEvent: 'Baseline allocation active'
+      },
       containerRuntime: {
         engine: 'OCI Standard Container',
         image: 'registry.internal/runtimes/connector-storage:v2.8',
@@ -184,6 +214,21 @@ export const INITIAL_NODES: DAGNode[] = [
     config: {
       cpuAllocation: '4.0 vCPU',
       memoryAllocation: '8.0 GiB',
+      autoScaling: {
+        enabled: true,
+        minCpu: '2.0 vCPU',
+        maxCpu: '16.0 vCPU',
+        minMemory: '4.0 GiB',
+        maxMemory: '32.0 GiB',
+        targetMetric: 'Throughput (rec/s)',
+        targetValue: 15000,
+        scaleUpThresholdPercent: 75,
+        scaleDownThresholdPercent: 20,
+        currentScaledCpu: '4.0 vCPU',
+        currentScaledMemory: '8.0 GiB',
+        scalingState: 'Nominal',
+        lastScalingEvent: 'Hardware enclave dynamic scale ready'
+      },
       containerRuntime: {
         engine: 'OCI Hardened Distroless MicroVM',
         image: 'registry.internal/security/tokenization-engine:v4.1',
@@ -263,6 +308,21 @@ export const INITIAL_NODES: DAGNode[] = [
     config: {
       cpuAllocation: '4.0 vCPU',
       memoryAllocation: '16.0 GiB (In-Memory Broadcast Hash Join)',
+      autoScaling: {
+        enabled: true,
+        minCpu: '2.0 vCPU',
+        maxCpu: '16.0 vCPU',
+        minMemory: '8.0 GiB',
+        maxMemory: '32.0 GiB',
+        targetMetric: 'Throughput (rec/s)',
+        targetValue: 20000,
+        scaleUpThresholdPercent: 80,
+        scaleDownThresholdPercent: 25,
+        currentScaledCpu: '4.0 vCPU',
+        currentScaledMemory: '16.0 GiB',
+        scalingState: 'Nominal',
+        lastScalingEvent: 'Baseline allocation active'
+      },
       containerRuntime: {
         engine: 'OCI Standard Container',
         image: 'registry.internal/transforms/enrichment-engine:v5.0',
@@ -342,6 +402,21 @@ export const INITIAL_NODES: DAGNode[] = [
     config: {
       cpuAllocation: '8.0 vCPU',
       memoryAllocation: '32.0 GiB',
+      autoScaling: {
+        enabled: true,
+        minCpu: '4.0 vCPU',
+        maxCpu: '32.0 vCPU',
+        minMemory: '16.0 GiB',
+        maxMemory: '64.0 GiB',
+        targetMetric: 'Throughput (rec/s)',
+        targetValue: 30000,
+        scaleUpThresholdPercent: 80,
+        scaleDownThresholdPercent: 25,
+        currentScaledCpu: '8.0 vCPU',
+        currentScaledMemory: '32.0 GiB',
+        scalingState: 'Nominal',
+        lastScalingEvent: 'Baseline allocation active'
+      },
       containerRuntime: {
         engine: 'OCI Standard Container',
         image: 'registry.internal/analytics/metric-aggregator:v2.1',
@@ -423,6 +498,21 @@ export const INITIAL_NODES: DAGNode[] = [
     config: {
       cpuAllocation: '4.0 vCPU',
       memoryAllocation: '16.0 GiB',
+      autoScaling: {
+        enabled: true,
+        minCpu: '2.0 vCPU',
+        maxCpu: '16.0 vCPU',
+        minMemory: '8.0 GiB',
+        maxMemory: '32.0 GiB',
+        targetMetric: 'Throughput (rec/s)',
+        targetValue: 25000,
+        scaleUpThresholdPercent: 80,
+        scaleDownThresholdPercent: 25,
+        currentScaledCpu: '4.0 vCPU',
+        currentScaledMemory: '16.0 GiB',
+        scalingState: 'Nominal',
+        lastScalingEvent: 'Baseline allocation active'
+      },
       containerRuntime: {
         engine: 'OCI Standard Container',
         image: 'registry.internal/loaders/analytics-loader:v4.6',
@@ -627,8 +717,57 @@ export const ASCII_UI_WIREFRAME = `+--------------------------------------------
 | [LOGS] [07:14:04.215] QUALITY: Assertion [Primary Key Completeness] evaluated on 22,600 batch records -> 100% compliant (0 nulls)     |
 +-----------------------------------------------------------------------------------------------------------------------------------------+`;
 
+export const ASCII_PROPOSED_WORKFLOW_GRAPH = `+====================================================================================================================+
+|                                    PROPOSED PIPELINE WORKFLOW GRAPH (ASCII DAG)                                    |
+|              "Ingest structured & semi-structured, mask sensitive data, enrich, aggregate, and write"             |
++====================================================================================================================+
+
+ [STAGE 01: INGESTION SOURCES]
+ +---------------------------------------+
+ | [node-1] Source Dataset A             | ---\\
+ | Category: Relational RDBMS Source     |     \\
+ | Resource: 2.0 vCPU | 4.0 GiB (Auto)   |      \\
+ +---------------------------------------+       \\
+                                                  v
+                                         +---------------------------------------+
+                                         | [node-3] Sensitive Data Masking       |
+                                         | Category: Hardware Enclave Guardrail  |
+                                         | Resource: 4.0 vCPU | 8.0 GiB (Auto)   |
+                                         | Security: FPE FF3-1 & SHA-256 HMAC    |
+                                         +---------------------------------------+
+                                                         |
+                                                         v
+                                         +---------------------------------------+
+                                         | [node-4] Reference Dataset Enrichment |
+                                         | Category: Metadata Join Transform     |
+                                         | Resource: 4.0 vCPU | 16.0 GiB (Auto)  |
+                                         | Logic: In-Memory Broadcast Hash Join  |
+                                         +---------------------------------------+
+                                                         |
+                                                         v
+                                         +---------------------------------------+
+                                         | [node-5] Business Metric Aggregator   |
+                                         | Category: Windowed Rollup Transform   |
+                                         | Resource: 8.0 vCPU | 32.0 GiB (Auto)  |
+                                         | Windows: Tumbling Hourly Rollups      |
+                                         +---------------------------------------+
+                                                         |
+                                                         v
+                                         +---------------------------------------+
+                                         | [node-6] Curated Analytics Repository |
+                                         | Category: Enterprise Data Warehouse   |
+                                         | Resource: 4.0 vCPU | 16.0 GiB (Auto)  |
+                                         | Format: ACID Columnar Snapshot Commits|
+                                         +---------------------------------------+
+                                                         ^
+ +---------------------------------------+      /
+ | [node-2] Source Dataset B             | ----/
+ | Category: Object Storage JSON Source  |
+ | Resource: 4.0 vCPU | 8.0 GiB (Auto)   |
+ +---------------------------------------+`;
+
 export const ASCII_REFERENCE_ARCHITECTURE = `+===========================================================================================================================+
-|                               NEXORCHESTRATOR END-TO-END CLOUD REFERENCE ARCHITECTURE                                      |
+|                               NXTORCHESTRATO END-TO-END CLOUD REFERENCE ARCHITECTURE                                      |
 |                                       (Vendor-Neutral Enterprise Cloud Blueprint)                                          |
 +===========================================================================================================================+
 
@@ -1228,6 +1367,23 @@ export const ROADMAP_PHASES: RoadmapPhase[] = [
           governance: 'Deliver executive presentation and operational handover to enterprise teams'
         },
         milestone: 'M6: Production Launch & Operational Handover'
+      },
+      {
+        week: 13,
+        title: 'Post-Cutover Hypercare, Day-2 Governance & Optimization',
+        focus: 'Live production validation, autoscaling fine-tuning under live volume, stakeholder review, and transition to operations.',
+        deliverables: [
+          'Zero-regression validation across all multi-AZ live workloads',
+          'Autoscaling policy parameter tuning under production traffic variance',
+          'Executive architecture closure report and knowledge transfer sign-off'
+        ],
+        workstreams: {
+          architecture: 'Consolidate baseline performance metrics against architectural targets',
+          security: 'Verify zero-drift security compliance audit in production environment',
+          platform: 'Fine-tune CPU/memory autoscaling sensitivity and cooldown parameters',
+          governance: 'Finalize enterprise operational handover and Day-2 governance committee'
+        },
+        milestone: 'M7: 90-Day Enterprise Milestone Complete'
       }
     ]
   }

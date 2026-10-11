@@ -6,19 +6,22 @@ import {
   ChevronUp, 
   ChevronDown, 
   CheckCircle2, 
-  Trash2
+  Trash2,
+  EyeOff
 } from 'lucide-react';
 
 interface ExecutionConsoleProps {
   isSimulating: boolean;
   recordsProcessed: number;
   runDuration: number;
+  onToggleHide?: () => void;
 }
 
 export const ExecutionConsole: React.FC<ExecutionConsoleProps> = ({
   isSimulating,
   recordsProcessed,
-  runDuration
+  runDuration,
+  onToggleHide
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<'logs' | 'telemetry' | 'quality'>('logs');
@@ -113,6 +116,16 @@ export const ExecutionConsole: React.FC<ExecutionConsoleProps> = ({
           >
             {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
           </button>
+
+          {onToggleHide && (
+            <button
+              onClick={onToggleHide}
+              className="p-1 text-slate-400 hover:text-cyan-300 transition-colors"
+              title="Hide Console Bar"
+            >
+              <EyeOff className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
       </div>
 

@@ -16,25 +16,21 @@ import { CollapsibleSection } from '../common/CollapsibleSection';
 export const RoadmapView: React.FC = () => {
   const [selectedPhaseNum, setSelectedPhaseNum] = useState<number>(1);
   const [workstreamFilter, setWorkstreamFilter] = useState<'all' | 'architecture' | 'security' | 'platform' | 'governance'>('all');
+  const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(true);
 
   const selectedPhase = ROADMAP_PHASES.find(p => p.phase === selectedPhaseNum) || ROADMAP_PHASES[0];
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-950 p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full select-none">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <span className="text-xs font-mono uppercase tracking-wider text-teal-400 bg-teal-950/60 px-2 py-0.5 rounded border border-teal-800/60">
-            Section 6 · 90-Day Enterprise Execution Roadmap
-          </span>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <CalendarRange className="w-6 h-6 text-teal-400" />
-            <span>90-Day Implementation Roadmap</span>
-          </h1>
-          <p className="text-sm text-slate-400 max-w-3xl">
-            Structured 12-week execution schedule partitioned into three 30-day phases. Each week details deliverables across Architecture, Security, Platform Engineering, and Governance workstreams.
-          </p>
-        </div>
+    <div className="flex-1 overflow-y-auto bg-slate-950 p-4 lg:p-6 space-y-4 max-w-7xl mx-auto w-full select-none">
+      {/* Top Header Toggle Strip */}
+      <div className="flex items-center justify-between pb-1">
+        <button
+          onClick={() => setIsHeaderVisible(!isHeaderVisible)}
+          className="px-2.5 py-1 text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded flex items-center gap-1.5 text-xs transition-colors"
+          title={isHeaderVisible ? "Hide header to maximize roadmap visibility" : "Show header"}
+        >
+          <span>{isHeaderVisible ? 'Hide Header' : 'Show Header'}</span>
+        </button>
 
         {/* Phase Selector Buttons */}
         <div className="flex items-center gap-1.5 bg-slate-900 p-1 rounded-lg border border-slate-800 shrink-0 text-xs font-medium">
@@ -53,6 +49,22 @@ export const RoadmapView: React.FC = () => {
           ))}
         </div>
       </div>
+
+      {/* Header Banner (Collapsible) */}
+      {isHeaderVisible && (
+        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
+          <span className="text-xs font-mono uppercase tracking-wider text-teal-400 bg-teal-950/60 px-2 py-0.5 rounded border border-teal-800/60">
+            Section 6 · 90-Day Enterprise Execution Roadmap
+          </span>
+          <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+            <CalendarRange className="w-5 h-5 text-teal-400" />
+            <span>90-Day Implementation Roadmap</span>
+          </h1>
+          <p className="text-xs text-slate-400 max-w-3xl">
+            Structured 12-week execution schedule partitioned into three 30-day phases. Each week details deliverables across Architecture, Security, Platform Engineering, and Governance workstreams.
+          </p>
+        </div>
+      )}
 
       {/* COLLAPSIBLE SUB-HEADER 1: Phase Mission & Exit Criteria */}
       <CollapsibleSection

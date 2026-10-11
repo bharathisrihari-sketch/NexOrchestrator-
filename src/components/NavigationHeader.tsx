@@ -45,7 +45,7 @@ export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
           <span className="w-6 h-6 rounded bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-xs font-black text-slate-950 shadow-sm shadow-cyan-500/30">
             N
           </span>
-          <span>NexOrchestrator Enterprise Studio</span>
+          <span>NxtGenOrchestrator Studio</span>
         </a>
       </div>
 

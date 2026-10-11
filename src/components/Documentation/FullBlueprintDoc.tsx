@@ -24,7 +24,7 @@ export const FullBlueprintDoc: React.FC = () => {
   const [copied, setCopied] = useState(false);
 
   const generateMarkdown = () => {
-    return `# Enterprise Architecture Blueprint: NexOrchestrator
+    return `# Enterprise Architecture Blueprint: NxtGenOrchestrator
 **Platform**: Low-Code / No-Code AI-Powered ETL & Data Integration Platform
 **Audience**: Architecture Review Board (ARB), C-Suite Leadership, Enterprise RFPs
 **Classification**: Enterprise Architecture Specification (Vendor-Neutral)
@@ -33,7 +33,7 @@ export const FullBlueprintDoc: React.FC = () => {
 ---
 
 ## Executive Summary
-NexOrchestrator is a cloud-neutral, zero-trust enterprise ETL and data integration platform designed to ingest high-volume structured, semi-structured, and streaming datasets. It combines a visual DAG canvas, natural-language AI copilot workflow synthesis, hardware-enclave format-preserving tokenization, and multi-tenant isolated worker runtimes.
+NxtGenOrchestrator is a cloud-neutral, zero-trust enterprise ETL and data integration platform designed to ingest high-volume structured, semi-structured, and streaming datasets. It combines a visual DAG canvas, natural-language AI copilot workflow synthesis, hardware-enclave format-preserving tokenization, and multi-tenant isolated worker runtimes.
 
 ---
 
@@ -97,13 +97,14 @@ ${ASCII_REFERENCE_ARCHITECTURE}
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleDownload = () => {
+  const handleDownload = (format: 'md' | 'txt' = 'md') => {
     const md = generateMarkdown();
-    const blob = new Blob([md], { type: 'text/markdown' });
+    const mime = format === 'md' ? 'text/markdown' : 'text/plain';
+    const blob = new Blob([md], { type: mime });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'NexOrchestrator_Enterprise_Architecture_Blueprint.md';
+    a.download = `NxtGenOrchestrator_Enterprise_Architecture_Blueprint.${format}`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -134,11 +135,20 @@ ${ASCII_REFERENCE_ARCHITECTURE}
           </button>
 
           <button
-            onClick={handleDownload}
+            onClick={() => handleDownload('md')}
             className="px-3 py-1.5 bg-slate-900 hover:bg-slate-850 border border-slate-700 text-xs font-medium rounded-lg text-slate-200 flex items-center gap-1.5 transition-colors"
           >
             <Download className="w-3.5 h-3.5 text-cyan-400" />
             <span>Download .md</span>
+          </button>
+
+          <button
+            onClick={() => handleDownload('txt')}
+            className="px-3 py-1.5 bg-slate-900 hover:bg-slate-850 border border-slate-700 text-xs font-medium rounded-lg text-slate-200 flex items-center gap-1.5 transition-colors"
+            title="Download blueprint code & specs as text file"
+          >
+            <Download className="w-3.5 h-3.5 text-teal-400" />
+            <span>Download .txt</span>
           </button>
 
           <button
@@ -163,7 +173,7 @@ ${ASCII_REFERENCE_ARCHITECTURE}
           defaultOpen={true}
         >
           <p className="text-xs text-slate-300 leading-relaxed">
-            Enterprise organizations require a modern, vendor-neutral data integration platform that enables both citizen data analysts and senior engineers to ingest, govern, and transform heterogeneous data streams without vendor lock-in. NexOrchestrator unites intuitive visual DAG authoring, generative AI pipeline synthesis, hardware-enclave format-preserving tokenization, and strict schema contracts into a single hardened architecture.
+            Enterprise organizations require a modern, vendor-neutral data integration platform that enables both citizen data analysts and senior engineers to ingest, govern, and transform heterogeneous data streams without vendor lock-in. NxtGenOrchestrator unites intuitive visual DAG authoring, generative AI pipeline synthesis, hardware-enclave format-preserving tokenization, and strict schema contracts into a single hardened architecture.
           </p>
         </CollapsibleSection>
 

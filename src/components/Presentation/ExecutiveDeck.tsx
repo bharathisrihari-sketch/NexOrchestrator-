@@ -33,7 +33,7 @@ export const ExecutiveDeck: React.FC<ExecutiveDeckProps> = ({
   const slides = [
     {
       title: "Executive Architecture Blueprint",
-      subtitle: "NexOrchestrator – Low-Code / No-Code AI-Powered ETL & Data Integration Platform",
+      subtitle: "NxtGenOrchestrator – Low-Code / No-Code AI-Powered ETL & Data Integration Platform",
       tag: "OVERVIEW",
       content: (
         <div className="space-y-6">
@@ -42,7 +42,7 @@ export const ExecutiveDeck: React.FC<ExecutiveDeckProps> = ({
               The Enterprise Challenge & Platform Mission
             </h3>
             <p className="text-sm text-slate-300 leading-relaxed max-w-3xl">
-              Modern enterprises struggle with brittle custom code pipelines, slow turnaround for analytics, and heightened security and compliance scrutiny. NexOrchestrator unifies visual low-code/no-code DAG authoring with natural language AI workflow synthesis, hardware-enclave format-preserving tokenization, and multi-tenant isolated worker pools.
+              Modern enterprises struggle with brittle custom code pipelines, slow turnaround for analytics, and heightened security and compliance scrutiny. NxtGenOrchestrator unifies visual low-code/no-code DAG authoring with natural language AI workflow synthesis, hardware-enclave format-preserving tokenization, and multi-tenant isolated worker pools.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-slate-800 text-xs">
               <div className="p-3 rounded-lg bg-slate-950/70 border border-slate-800">

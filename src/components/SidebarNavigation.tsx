@@ -4,6 +4,7 @@ import {
   GitBranch, 
   Sparkles, 
   ShieldCheck, 
+  ShieldAlert,
   BarChart3, 
   Network, 
   CalendarRange, 
@@ -16,19 +17,26 @@ import {
   ChevronDown, 
   ChevronRight,
   Server,
-  FolderGit2
+  FolderGit2,
+  Eye,
+  EyeOff,
+  Activity,
+  BookOpen
 } from 'lucide-react';
 import { EnvironmentType, WorkspaceType } from '../types/architecture';
 
 export type ActiveTab = 
   | 'canvas'
+  | 'results'
   | 'lineage'
   | 'copilot'
   | 'inspector'
   | 'readiness'
   | 'reference'
   | 'roadmap'
+  | 'audit'
   | 'tests'
+  | 'master_doc'
   | 'dossier';
 
 interface SidebarNavigationProps {
@@ -42,6 +50,9 @@ interface SidebarNavigationProps {
   onWorkspaceChange: (ws: WorkspaceType) => void;
   onOpenExportModal: () => void;
   onOpenPresentation: () => void;
+  onHideSidebar?: () => void;
+  onToggleAllHeaders?: () => void;
+  areAllHeadersHidden?: boolean;
 }
 
 export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
@@ -54,7 +65,10 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
   workspace,
   onWorkspaceChange,
   onOpenExportModal,
-  onOpenPresentation
+  onOpenPresentation,
+  onHideSidebar,
+  onToggleAllHeaders,
+  areAllHeadersHidden = false
 }) => {
   const [navGroupsCollapsed, setNavGroupsCollapsed] = useState<Record<string, boolean>>({
     studio: false,
@@ -72,6 +86,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
       title: 'Studio & Engineering',
       items: [
         { id: 'canvas', label: 'Workflow Canvas', icon: Layers, badge: 'DAG' },
+        { id: 'results', label: 'Execution Results', icon: Activity, badge: 'Logs' },
         { id: 'lineage', label: 'Data Lineage', icon: GitBranch, badge: 'Parser' },
         { id: 'copilot', label: 'AI Copilot', icon: Sparkles, badge: 'NL' },
         { id: 'inspector', label: 'Secure Execution', icon: ShieldCheck, badge: 'Sandbox' },
@@ -90,6 +105,8 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
       id: 'governance',
       title: 'Testing & Specifications',
       items: [
+        { id: 'master_doc', label: 'Master Documentation', icon: BookOpen, badge: 'Guide' },
+        { id: 'audit', label: 'Governance Audit Logs', icon: ShieldAlert, badge: 'Audit' },
         { id: 'tests', label: 'Test Suites & Docs', icon: CheckCircle2, badge: 'Pass' },
         { id: 'dossier', label: 'ARB Blueprint Dossier', icon: FileText, badge: 'Spec' },
       ]
@@ -109,10 +126,10 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
             </span>
             <div className="min-w-0">
               <span className="text-sm font-bold tracking-tight text-white block truncate">
-                NexOrchestrator Studio
+                NxtGenOrchestrator
               </span>
               <span className="text-[10px] font-mono text-cyan-400 block truncate">
-                Enterprise Blueprint
+                Enterprise Studio
               </span>
             </div>
           </div>
@@ -124,13 +141,24 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
           </div>
         )}
 
-        <button
-          onClick={onToggleCollapse}
-          className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-900 transition-colors shrink-0"
-          title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-        >
-          {isCollapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
-        </button>
+        <div className="flex items-center gap-1">
+          {onHideSidebar && (
+            <button
+              onClick={onHideSidebar}
+              className="p-1.5 text-slate-400 hover:text-cyan-300 rounded-lg hover:bg-slate-900 transition-colors shrink-0"
+              title="Hide sideways navigation bar for full canvas width"
+            >
+              <EyeOff className="w-3.5 h-3.5" />
+            </button>
+          )}
+          <button
+            onClick={onToggleCollapse}
+            className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-900 transition-colors shrink-0"
+            title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+          >
+            {isCollapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
+          </button>
+        </div>
       </div>
 
       {/* Environment & Workspace Mini Selectors (Expanded mode only) */}
@@ -242,13 +270,13 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
 
         <button
           onClick={onOpenExportModal}
-          className={`w-full py-1.5 px-2.5 text-xs font-bold text-slate-950 bg-gradient-to-r from-cyan-400 to-cyan-300 hover:from-cyan-300 hover:to-cyan-200 rounded-lg flex items-center gap-2 transition-colors shadow-sm shadow-cyan-500/20 ${
+          className={`w-full py-1.5 px-2.5 text-xs font-bold text-slate-950 bg-gradient-to-r from-cyan-400 to-amber-300 hover:from-cyan-300 hover:to-amber-200 rounded-lg flex items-center gap-2 transition-colors shadow-sm shadow-cyan-500/20 ${
             isCollapsed ? 'justify-center px-0' : ''
           }`}
-          title="Export Architecture Blueprint"
+          title="Download Complete Code for Claude & Export Architecture"
         >
           <Download className="w-4 h-4 shrink-0" />
-          {!isCollapsed && <span>Export Blueprint</span>}
+          {!isCollapsed && <span>Download Code (Claude)</span>}
         </button>
       </div>
     </aside>

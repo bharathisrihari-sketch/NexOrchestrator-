@@ -20,6 +20,7 @@ import { CollapsibleSection } from '../common/CollapsibleSection';
 export const ReadinessDashboard: React.FC = () => {
   const [selectedPillarId, setSelectedPillarId] = useState<string>('security');
   const [statusFilter, setStatusFilter] = useState<'All' | 'Ready' | 'In Progress'>('All');
+  const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(true);
 
   const selectedPillar = READINESS_PILLARS.find(p => p.id === selectedPillarId) || READINESS_PILLARS[0];
 
@@ -44,35 +45,49 @@ export const ReadinessDashboard: React.FC = () => {
   );
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-950 p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full select-none">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <span className="text-xs font-mono uppercase tracking-wider text-blue-400 bg-blue-950/60 px-2 py-0.5 rounded border border-blue-800/60">
-            Section 4 · Architecture Scorecard & Compliance
-          </span>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <ShieldCheck className="w-6 h-6 text-blue-400" />
-            <span>Enterprise Readiness Assessment Dashboard</span>
-          </h1>
-          <p className="text-sm text-slate-400 max-w-3xl">
-            Multi-dimensional evaluation of NexOrchestrator across the six core pillars of enterprise architecture. Calibrated against CMMI maturity levels and non-functional requirements (NFRs).
-          </p>
-        </div>
-
-        {/* Global Score Widget */}
-        <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center gap-4 shrink-0 shadow-lg">
-          <div>
-            <span className="text-[10px] text-slate-400 uppercase font-mono block">Aggregate Readiness</span>
-            <span className="text-2xl font-bold text-cyan-400 font-mono">{averageScore}%</span>
-          </div>
-          <div className="h-8 w-[1px] bg-slate-800" />
-          <div>
-            <span className="text-[10px] text-slate-400 uppercase font-mono block">CMMI Profile</span>
-            <span className="text-sm font-semibold text-emerald-400">Level 4.2 Managed</span>
-          </div>
-        </div>
+    <div className="flex-1 overflow-y-auto bg-slate-950 p-4 lg:p-6 space-y-4 max-w-7xl mx-auto w-full select-none">
+      {/* Header Visibility Toggle Strip */}
+      <div className="flex items-center justify-between pb-1">
+        <span className="text-xs font-mono text-blue-400">Readiness Scorecard</span>
+        <button
+          onClick={() => setIsHeaderVisible(!isHeaderVisible)}
+          className="px-2.5 py-1 text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded flex items-center gap-1.5 text-xs transition-colors"
+          title={isHeaderVisible ? "Hide header to maximize dashboard visibility" : "Show header"}
+        >
+          <span>{isHeaderVisible ? 'Hide Header' : 'Show Header'}</span>
+        </button>
       </div>
+
+      {/* Header Banner (Collapsible) */}
+      {isHeaderVisible && (
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+          <div className="space-y-1">
+            <span className="text-xs font-mono uppercase tracking-wider text-blue-400 bg-blue-950/60 px-2 py-0.5 rounded border border-blue-800/60">
+              Section 4 · Architecture Scorecard & Compliance
+            </span>
+            <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-blue-400" />
+              <span>Enterprise Readiness Assessment Dashboard</span>
+            </h1>
+            <p className="text-xs text-slate-400 max-w-3xl">
+              Multi-dimensional evaluation of NxtGenOrchestrator across the six core pillars of enterprise architecture. Calibrated against CMMI maturity levels and non-functional requirements (NFRs).
+            </p>
+          </div>
+
+          {/* Global Score Widget */}
+          <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 flex items-center gap-4 shrink-0 shadow-lg">
+            <div>
+              <span className="text-[10px] text-slate-400 uppercase font-mono block">Aggregate Readiness</span>
+              <span className="text-xl font-bold text-cyan-400 font-mono">{averageScore}%</span>
+            </div>
+            <div className="h-7 w-[1px] bg-slate-800" />
+            <div>
+              <span className="text-[10px] text-slate-400 uppercase font-mono block">CMMI Profile</span>
+              <span className="text-xs font-semibold text-emerald-400">Level 4.2 Managed</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Filter Tabs */}
       <div className="flex items-center gap-2">

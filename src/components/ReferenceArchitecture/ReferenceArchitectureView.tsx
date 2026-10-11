@@ -18,6 +18,7 @@ import { ASCII_REFERENCE_ARCHITECTURE } from '../../data/blueprintData';
 export const ReferenceArchitectureView: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [viewMode, setViewMode] = useState<'visual' | 'ascii'>('visual');
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
 
   const handleCopyAscii = () => {
     navigator.clipboard.writeText(ASCII_REFERENCE_ARCHITECTURE);
@@ -94,21 +95,16 @@ export const ReferenceArchitectureView: React.FC = () => {
   ];
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-950 p-6 lg:p-8 space-y-8 max-w-7xl mx-auto w-full">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <span className="text-xs font-mono uppercase tracking-wider text-purple-400 bg-purple-950/60 px-2 py-0.5 rounded border border-purple-800/60">
-            Section 5 · End-to-End Enterprise Architecture
-          </span>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <Network className="w-6 h-6 text-purple-400" />
-            <span>End-to-End Cloud Reference Architecture</span>
-          </h1>
-          <p className="text-sm text-slate-400 max-w-3xl">
-            Vendor-neutral cloud reference architecture for NexOrchestrator, encompassing perimeter security, presentation, AI synthesis, workflow scheduling, worker isolation, and persistent storage tiers.
-          </p>
-        </div>
+    <div className="flex-1 overflow-y-auto bg-slate-950 p-4 lg:p-6 space-y-5 max-w-7xl mx-auto w-full select-none">
+      {/* Top Bar with Hide/Show Header Button and Mode Controls */}
+      <div className="flex items-center justify-between pb-1">
+        <button
+          onClick={() => setIsHeaderVisible(!isHeaderVisible)}
+          className="px-2.5 py-1 text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded flex items-center gap-1.5 text-xs transition-colors"
+          title={isHeaderVisible ? "Hide header to maximize diagram canvas" : "Show header"}
+        >
+          <span>{isHeaderVisible ? 'Hide Header' : 'Show Header'}</span>
+        </button>
 
         {/* View Mode & Copy Button */}
         <div className="flex items-center gap-2 shrink-0">
@@ -141,6 +137,22 @@ export const ReferenceArchitectureView: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Header Banner (Collapsible) */}
+      {isHeaderVisible && (
+        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
+          <span className="text-xs font-mono uppercase tracking-wider text-purple-400 bg-purple-950/60 px-2 py-0.5 rounded border border-purple-800/60">
+            Section 5 · End-to-End Enterprise Architecture
+          </span>
+          <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+            <Network className="w-5 h-5 text-purple-400" />
+            <span>End-to-End Cloud Reference Architecture</span>
+          </h1>
+          <p className="text-xs text-slate-400 max-w-3xl">
+            Vendor-neutral cloud reference architecture for NxtGenOrchestrator, encompassing perimeter security, presentation, AI synthesis, workflow scheduling, worker isolation, and persistent storage tiers.
+          </p>
+        </div>
+      )}
 
       {/* VIEW: VISUAL ARCHITECTURE */}
       {viewMode === 'visual' && (
